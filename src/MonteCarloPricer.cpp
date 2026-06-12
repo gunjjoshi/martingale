@@ -15,7 +15,7 @@ namespace pricing {
 		std::normal_distribution<double> normal( 0.0, 1.0 );
 
 		// The deterministic part of the GBM exponent: (r - σ²/2) · T
-		const double drift = ( riskFreeRate - ( 0.5*volatility*volatility ) * maturity );
+		const double drift = ( riskFreeRate - 0.5*volatility*volatility ) * maturity;
 
 		// The stochastic scaling factor: σ · √T
 		const double diffusion = volatility * std::sqrt( maturity );
