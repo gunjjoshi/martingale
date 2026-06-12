@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <iostream>
 #include <MonteCarloPricer.hpp>
+#include "Payoff.hpp"
 using namespace pricing;
 
 int main() {
@@ -22,11 +23,24 @@ int main() {
 
 	const std::uint64_t simulations = 100000;
 
-	Option option( strike, maturity );
-	const double price = MonteCarloPricer::priceEuropeanCall( spot, rate, vol, option, simulations );
+	CallPayoff call( strike );
+	PutPayoff put( strike );
 
-	std::cout << "European Call Option\n\n" << "Spot Price : " << spot << "\n" << "Strike     : " << strike << "\n" << "Volatility : " << vol * 100 << "%\n" << "Rate       : " << rate * 100 << "%\n" << "Maturity   : " << maturity << " year\n\n" << std::fixed << std::setprecision(2) << "Monte Carlo Price: " << price << std::endl;
+	Option callOption( call, maturity );
+	Option putOption( put, maturity );
+
+	const double callPrice = MonteCarloPricer::price( spot, rate, vol, callOption, simulations );
+	const double putPrice = MonteCarloPricer::price( spot, rate, vol, putOption, simulations );
+
+	std::cout << "European Options\n\n"
+			<< "Spot Price : " << spot << "\n"
+			<< "Strike     : " << strike << "\n"
+			<< "Volatility : " << vol * 100 << "%\n"
+			<< "Rate       : " << rate * 100 << "%\n"
+			<< "Maturity   : " << maturity << " year\n\n"
+			<< std::fixed << std::setprecision(2)
+			<< "Monte Carlo Call Price: " << callPrice << "\n"
+			<< "Monte Carlo Put  Price: " << putPrice << std::endl;
 
 	return 0;
-
 }

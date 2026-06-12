@@ -1,11 +1,10 @@
 #include "MonteCarloPricer.hpp"
-#include <algorithm>
 #include <cmath>
 #include <random>
 
 namespace pricing {
-	double MonteCarloPricer::priceEuropeanCall( double spot, double riskFreeRate, double volatility, const Option& option, std::uint64_t simulations, std::uint64_t seed ) {
-		const double strike = option.getStrike();
+	double MonteCarloPricer::price( double spot, double riskFreeRate, double volatility, const Option& option, std::uint64_t simulations, std::uint64_t seed ) {
+		const Payoff& payoff = option.getPayoff();
 		const double maturity = option.getMaturity();
 
 		std::mt19937_64 generator( seed != 0 ? seed : std::random_device{}());
@@ -29,10 +28,9 @@ namespace pricing {
 			//              └────── drift ───┘   └─diffusion·z─┘
 			const double terminalPrice = spot * std::exp( drift + diffusion*z );
 
-			// European call payoff: max(S_T - K, 0)
-			//   If S_T > K the option is in-the-money; payoff = S_T - K.
-        	//   If S_T ≤ K the option expires worthless; payoff = 0.
-			payoffSum += std::max( terminalPrice - strike, 0.0 );
+			// Delegate to the supplied Payoff so we stay agnostic to
+			// whether this is a call, a put, or something more exotic.
+			payoffSum += payoff( terminalPrice );
 		}
 		// Monte Carlo estimator: (1/N) · Σ payoff_i
 		// This converges to E[max(S_T - K, 0)] by the Law of Large Numbers.
@@ -41,11 +39,5 @@ namespace pricing {
 		// Discount the expected payoff back to present value:
     	//   C = e^{-rT} · E[max(S_T - K, 0)]
 		return std::exp( -riskFreeRate * maturity ) * averagePayoff;
-	}
-
-	double MonteCarloPricer::priceEuropeanCall( const PricingRequest& req, std::uint64_t seed ) {
-		Option option( req.strike, req.maturity);
-
-		return priceEuropeanCall( req.spot, req.riskFreeRate, req.volatility, option, req.simulations, seed );
 	}
 } // namespace pricing

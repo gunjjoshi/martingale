@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # If the compiler does not support C++20, fail loudly at configure time rather than silently falling back to an older standard and producing confusing compile errors later.
 
 # Compile the engine into a static library called 'pricing_core'.
-add_library( pricing_core src/Option.cpp src/MonteCarloPricer.cpp )
+add_library( pricing_core src/Option.cpp src/Payoff.cpp src/MonteCarloPricer.cpp )
 
 # Expose the 'include/' directory to anything that links pricing_core.
 # PUBLIC means: this library uses it, AND so does any target that links it.

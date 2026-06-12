@@ -2,10 +2,10 @@
 
 namespace pricing {
 
-	Option::Option( double strike, double maturity ) : strike_( strike ), maturity_( maturity ) {}
+	Option::Option( const Payoff& payoff, double maturity ) : payoff_( payoff ), maturity_( maturity ) {}
 
-	double Option::getStrike() const {
-		return strike_;
+	const Payoff& Option::getPayoff() const {
+		return payoff_;
 	}
 
 	double Option::getMaturity() const {

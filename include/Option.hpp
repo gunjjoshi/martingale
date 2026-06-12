@@ -1,17 +1,19 @@
 #pragma once
 
+#include "Payoff.hpp"
+
 namespace pricing {
 
 	class Option {
 
 		public:
-			Option ( double strike, double maturity );
+			Option ( const Payoff& payoff, double maturity );
 
-			double getStrike() const;
+			const Payoff& getPayoff() const;
 			double getMaturity() const;
 
 		private:
-			double strike_;
+			const Payoff& payoff_;
 			double maturity_;
 	};
 } // namespace pricing

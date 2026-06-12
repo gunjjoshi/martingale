@@ -26,9 +26,11 @@ Integrating the GBM SDE exactly gives the terminal stock price under the risk-ne
 
 $$S_T = S_0 \cdot \exp\!\left(\left(r - \tfrac{\sigma^2}{2}\right)T + \sigma\sqrt{T}\,Z\right), \qquad Z \sim \mathcal{N}(0,1)$$
 
-The price of a European call with strike $K$ is the discounted expected payoff, estimated by averaging over $N$ simulated paths:
+The present value of any European-style instrument is then:
 
-$$C \approx e^{-rT} \cdot \frac{1}{N} \sum_{i=1}^{N} \max\!\left(S_T^{(i)} - K,\; 0\right)$$
+$$V \approx e^{-rT} \cdot \frac{1}{N} \sum_{i=1}^{N} \phi\!\left(S_T^{(i)}\right)$$
+
+where $\phi$ is the **payoff function** of the contract. For a call: $\phi(S_T) = \max(S_T - K,\, 0)$; for a put: $\phi(S_T) = \max(K - S_T,\, 0)$.
 
 ---
 
@@ -40,14 +42,14 @@ $$C \approx e^{-rT} \cdot \frac{1}{N} \sum_{i=1}^{N} \max\!\left(S_T^{(i)} - K,\
 ### CLI
 ```bash
 c++ -std=c++20 -O2 -Iinclude \
-    src/Option.cpp src/MonteCarloPricer.cpp src/main.cpp \
+    src/Option.cpp src/Payoff.cpp src/MonteCarloPricer.cpp src/main.cpp \
     -o option_pricer && ./option_pricer
 ```
 
 ### Validation Test
 ```bash
 c++ -std=c++20 -O2 -Iinclude \
-    src/Option.cpp src/MonteCarloPricer.cpp tests/test_pricer.cpp \
+    src/Option.cpp src/Payoff.cpp src/MonteCarloPricer.cpp tests/test_pricer.cpp \
     -o test_pricer && ./test_pricer
 ```
 
