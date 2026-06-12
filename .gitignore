@@ -1,0 +1,18 @@
+# Compiled Binaries
+option_pricer
+test_pricer
+
+# Build Artifacts
+build/
+bin/
+obj/
+*.o
+*.a
+*.so
+*.dylib
+
+# System & IDE
+.DS_Store
+.vscode/
+.idea/
+*.dSYM/
